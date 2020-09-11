@@ -3,21 +3,21 @@ pipeline
     agent any
     stages
     {
-        stage('ContinuousDownload')
+        stage('ContinuousDownload_Master')
         {
             steps
             {
                 git 'https://github.com/intelliqittrainings/maven.git'
             }
         }
-        stage('ContinuousBuild')
+        stage('ContinuousBuild_Master')
         {
             steps
             {
                sh label: '', script: 'mvn package'
             }
         }
-        stage('ContinuousDeployment')
+        stage('ContinuousDeployment_Master')
         {
             steps
             {
@@ -25,7 +25,7 @@ pipeline
 scp /home/ubuntu/.jenkins/workspace/DeclarativePipeline/webapp/target/webapp.war ubuntu@172.31.45.245:/var/lib/tomcat8/webapps/newtestapp.war'''
             }
         }
-        stage('ContinuousTesting')
+        stage('ContinuousTesting_Master')
         {
             steps
             {
@@ -33,11 +33,10 @@ scp /home/ubuntu/.jenkins/workspace/DeclarativePipeline/webapp/target/webapp.war
                 sh label: '', script: 'java -jar /home/ubuntu/.jenkins/workspace/DeclarativePipeline/testing.jar'
             }
         }
-        stage('ContinuousDelivery')
+        stage('ContinuousDelivery_Master')
         {
             steps
             {
-                input submitter: 'srinivas', message: 'Waiting for Approval!'
                 
                  sh label: '', script: '''
 scp /home/ubuntu/.jenkins/workspace/DeclarativePipeline/webapp/target/webapp.war ubuntu@172.31.42.87:/var/lib/tomcat8/webapps/newprodapp.war'''
